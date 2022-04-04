@@ -1,8 +1,8 @@
 import { Command, EnmitySectionID, registerCommands, ApplicationCommandInputType, ApplicationCommandOptionType, ApplicationCommandType } from "enmity-api/commands";
-import { registerPlugin } from "enmity-api/plugins";
+import { Plugin, registerPlugin } from "enmity-api/plugins";
 
-registerPlugin({
-  name: "i use arch btw",
+const IUseArchBtw: Plugin = {
+  name: "IUseArchBtw",
   commands: [],
 
   onStart() {
@@ -45,4 +45,6 @@ registerPlugin({
   onStop() {
     this.commands = [];
   }
-});
+}
+
+registerPlugin(IUseArchBtw);
