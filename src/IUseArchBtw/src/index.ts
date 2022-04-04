@@ -23,8 +23,8 @@ const IUseArchBtw: Plugin = {
         name: "text",
         displayName: "text",
 
-        description: "Text to send",
-        displayDescription: "Text to send",
+        description: "Text to send btw",
+        displayDescription: "Text to send btw",
         
         type: ApplicationCommandOptionType.String,
         required: true
