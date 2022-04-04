@@ -1,8 +1,8 @@
 import { Command, EnmitySectionID, ApplicationCommandInputType, ApplicationCommandOptionType, ApplicationCommandType } from "enmity-api/commands";
 import { Plugin, registerPlugin } from "enmity-api/plugins";
-import { owoify } from "owoify-js";
+import owoify from "owoify-js";
 
-const owoify: Plugin = {
+const Owoify: Plugin = {
   name: "owoify",
   commands: [],
 
@@ -11,8 +11,8 @@ const owoify: Plugin = {
       id: "owoify-command",
       applicationId: EnmitySectionID,
 
-      name: "owo",
-      displayName: "owo",
+      name: "owoify",
+      displayName: "owoify",
 
       description: "owo, uwu, uvu, what's this?",
       displayDescription: "owo, uwu, uvu, what's this?",
@@ -55,7 +55,7 @@ const owoify: Plugin = {
               name: "uvu",
               displayName: "uvu",
               value: "uvu"
-            },
+            }
           ]
         }
       ],
@@ -77,4 +77,4 @@ const owoify: Plugin = {
   }
 }
 
-registerPlugin(owoify);
+registerPlugin(Owoify);

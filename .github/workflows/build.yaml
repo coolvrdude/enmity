@@ -79,6 +79,7 @@ jobs:
             cd $HOME/.enmity-store
             go run cmds/store/main.go -name "beerpsi's shitposts" -dir ${{ github.workspace }}
           )
+          touch publish/.nojekyll
       - 
         name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4.2.5
