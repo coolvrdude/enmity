@@ -19,22 +19,35 @@ const IUseArchBtw: Plugin = {
       type: ApplicationCommandType.Chat,
       inputType: ApplicationCommandInputType.BuiltInText,
       
-      options: [{
-        name: "text",
-        displayName: "text",
+      options: [
+        {
+          name: "text",
+          displayName: "text",
 
-        description: "Text to send btw",
-        displayDescription: "Text to send btw",
-        
-        type: ApplicationCommandOptionType.String,
-        required: true
-      }],
+          description: "Text to send btw",
+          displayDescription: "Text to send btw",
+          
+          type: ApplicationCommandOptionType.String,
+          required: true
+        },
+        {
+          name: "suffix",
+          displayName: "suffix",
+
+          description: "Text to append to the end of your message",
+          displayDescription: "Text to append to the end of your message",
+
+          type: ApplicationCommandOptionType.String,
+          required: false
+        }
+      ],
     
       execute: function (args, message) {
         const text = args[0].value;
+        const append = args[1]?.value ?? "i use arch btw";
     
         return {
-          content: `${text} i use arch btw`
+          content: `${text} ${append}`
         };
       }
     }
