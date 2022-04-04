@@ -43,3 +43,38 @@ jobs:
           path: |
             src/*/dist/*.js
             src/*/dist/*.json
+  publish:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - 
+        name: Download artifacts
+        uses: actions/download-artifact@v3
+        with: 
+          name: plugins
+          path: plugins/
+      -
+        name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '^1.17'
+      -
+        name: Setup Enmity Store
+        run: |
+          mkdir -p $HOME/.enmity-store
+          git clone https://github.com/beerpiss/enmity-store $HOME/.enmity-store
+          (
+            cd $HOME/.enmity-store
+            go run cmds/store/main.go -name "beerpsi's shitposts" -dir ${{ github.workspace }}
+          )
+      - 
+        name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4.2.5
+        if: github.ref == 'refs/heads/main'
+        with:
+          branch: gh-pages
+          folder: publish
+          git-config-name: GitHub Actions
+          git-config-email: github-actions[bot]@users.noreply.github.com
+          single-commit: true
+
