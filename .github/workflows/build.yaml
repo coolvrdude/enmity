@@ -57,7 +57,14 @@ jobs:
         uses: actions/download-artifact@v3
         with: 
           name: plugins
-          path: plugins/
+          path: plugins-artifact/
+      -
+        name: Flatten plugins repository
+        run: |
+          mkdir -p plugins 
+          find plugins-artifact -type f -name '*.js' -exec cp '{}' plugins \;
+          find plugins-artifact -type f -name '*.json' -exec cp '{}' plugins \;
+          rm -rf plugins-artifact
       -
         name: Setup Go
         uses: actions/setup-go@v3
