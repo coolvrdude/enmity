@@ -1,0 +1,45 @@
+name: Build and publish Enmity plugins
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'skip-ci')"
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    steps:
+      -
+        name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      -
+        name: Setup Noode
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+          cache-dependency-path: 'src/*/package-lock.json'
+      -
+        name: Building plugins
+        run: |
+          for plugin in src/*; do
+            (
+              cd $plugin
+              mkdir -p dist
+              npm install 
+              npm run build
+            )
+          done
+      -
+        name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: plugins
+          path: |
+            src/*/dist/*.js
+            src/*/dist/*.json
