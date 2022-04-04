@@ -1,4 +1,4 @@
-import { Command, EnmitySectionID, registerCommands, ApplicationCommandInputType, ApplicationCommandOptionType, ApplicationCommandType } from "enmity-api/commands";
+import { Command, EnmitySectionID, ApplicationCommandInputType, ApplicationCommandOptionType, ApplicationCommandType } from "enmity-api/commands";
 import { Plugin, registerPlugin } from "enmity-api/plugins";
 
 const IUseArchBtw: Plugin = {
