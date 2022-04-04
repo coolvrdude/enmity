@@ -28,6 +28,9 @@ jobs:
         name: Building plugins
         run: |
           for plugin in src/*; do
+            if [ "$(basename $plugin)" = "PluginTemplate" ]; then
+              continue
+            fi
             (
               cd $plugin
               mkdir -p dist
