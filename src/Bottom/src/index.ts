@@ -73,7 +73,12 @@ const BottomPlugin: Plugin = {
       execute: async function (args, message) {
         const text = args[0].value;
         const channel = message.channel;
-        sendReply(channel.id, decode(text));
+        try {
+          sendReply(channel.id, decode(text))
+        }
+        catch (Error) {
+          sendReply(channel.id, "Invalid input, sorry 👉👈")
+        }
       }
     }
 
