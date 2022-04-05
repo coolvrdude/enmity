@@ -3,7 +3,6 @@ import { Plugin, registerPlugin } from "enmity-api/plugins";
 import { sendReply } from "enmity-api/clyde";
 import { encode, decode } from "./bottomify";
 
-
 const BottomPlugin: Plugin = {
   name: "Bottom",
   commands: [],
@@ -74,7 +73,7 @@ const BottomPlugin: Plugin = {
         const text = args[0].value;
         const channel = message.channel;
         try {
-          sendReply(channel.id, decode(text))
+          sendReply(channel.id, decode(text.replace(/[^🫂💖✨🥺,❤️👉👈]+/g, "")))
         }
         catch (Error) {
           sendReply(channel.id, "Invalid input, sorry 👉👈")
