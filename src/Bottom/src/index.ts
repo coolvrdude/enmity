@@ -13,8 +13,8 @@ const BottomPlugin: Plugin = {
       id: "bottom-command",
       applicationId: EnmitySectionID,
 
-      name: "bottom",
-      displayName: "bottom",
+      name: "bottom bottomify",
+      displayName: "bottom bottomify",
 
       description: "Translate and send text as bottom 🥺",
       displayDescription: "Translate and send text as bottom 🥺",
@@ -48,8 +48,8 @@ const BottomPlugin: Plugin = {
       id: "regress-command",
       applicationId: EnmitySectionID,
 
-      name: "regress",
-      displayName: "regress",
+      name: "bottom regress",
+      displayName: "bottom regress",
 
       description: "Translate from bottom 🥺 to text",
       displayDescription: "Translate from bottom 🥺 to text",
