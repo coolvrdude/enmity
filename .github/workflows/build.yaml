@@ -3,10 +3,9 @@ name: Build and publish Enmity plugins
 on:
   push:
     paths:
-    - './**/*.js'
-    - './**/*.json'
-    - './**/*.ts'
-    - '.gitignore'
+    - '**.js'
+    - '**.json'
+    - '**.ts'
     - '.github/workflows/build.yaml'
     branches:
     - main
