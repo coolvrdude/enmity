@@ -4,6 +4,7 @@ import { create } from "enmity-api/patcher";
 
 const MessagesModule = getModule(m => m.default?.sendMessage)
 const UploadsModule = getModule(m => m.default?.uploadLocalFiles)
+const TimeRegex = new RegExp("(?:0?\\d|1[0-2]):[0-5]\\d\\s*[ap]m|(?:[01]?\\d|2[0-3]):[0-5]\\d", "gi");
 
 
 // 12h time is such a massive L 
@@ -11,7 +12,7 @@ const UploadsModule = getModule(m => m.default?.uploadLocalFiles)
 function convertTo24HourTime(time: string): string {
   const AMPM = time.slice(-2).toLowerCase();
   let timeArr = time.slice(0, -2).split(":");
-  let retVal;
+  let retVal: string;
   if (AMPM === "am" && timeArr[0] === "12") {
     // catching edge-case of 12AM
     timeArr[0] = "00";
@@ -42,16 +43,16 @@ const TimestampsPlugin: Plugin = {
     const MessageTimestampPatcher = create("message-timestamp-patcher");
     MessageTimestampPatcher.before(MessagesModule.default, "sendMessage", (_, args, __) => {
       // channel ID: args[0]
-      if (args[1]["content"].search(/(?:0?\d|1[0-2]):[0-5]\d\s+[ap]m|(?:[01]?\d|2[0-3]):[0-5]\d/gi) !== -1) {
-        args[1]["content"] =  args[1].content.replace(/(?:0?\d|1[0-2]):[0-5]\d\s+[ap]m|(?:[01]?\d|2[0-3]):[0-5]\d/gi, (x: string) => getUnixTimestamp(x));
+      if (args[1]["content"].search(TimeRegex) !== -1) {
+        args[1]["content"] =  args[1].content.replace(TimeRegex, (x: string) => getUnixTimestamp(x));
       }
     });
 
     const UploadTimestampPatcher = create("upload-timestamp-patcher");
     UploadTimestampPatcher.before(UploadsModule.default, "uploadLocalFiles", (_, args, __) => {
       // channel ID: args[0]["id"]
-      if (args[3]["content"].search(/(?:0?\d|1[0-2]):[0-5]\d\s+[ap]m|(?:[01]?\d|2[0-3]):[0-5]\d/gi) !== -1) {
-        args[3]["content"] =  args[3].content.replace(/(?:0?\d|1[0-2]):[0-5]\d\s+[ap]m|(?:[01]?\d|2[0-3]):[0-5]\d/gi, (x: string) => getUnixTimestamp(x));
+      if (args[3]["content"].search(TimeRegex) !== -1) {
+        args[3]["content"] =  args[3].content.replace(TimeRegex, (x: string) => getUnixTimestamp(x));
       }
     });
   },
