@@ -4,7 +4,7 @@ import { sendReply } from "enmity-api/clyde";
 
 async function evaluate(src: string, isAsync: boolean = false) {
   let result, errored;
-  if (isAsync) {
+  if (isAsync || src.includes("await")) {
     if (src.includes(";") && (!src.endsWith(";") || src.includes("\n") || (src.split(';').length) > 2)) {
       src = `(async () => { ${src} })()`;
     } else {
@@ -36,11 +36,11 @@ const EvalPlugin: Plugin = {
       id: "sync-eval-command",
       applicationId: EnmitySectionID,
 
-      name: "eval sync",
-      displayName: "eval sync",
+      name: "eval",
+      displayName: "eval",
 
-      description: "Evaluates JS synchronously",
-      displayDescription: "Evaluates JS synchronously. DO NOT RUN WHAT YOU DO NOT UNDERSTAND.",
+      description: "Evaluates JS",
+      displayDescription: "Evaluates JS. DO NOT RUN WHAT YOU DO NOT UNDERSTAND.",
       
       type: ApplicationCommandType.Chat,
       inputType: ApplicationCommandInputType.BuiltInText,
@@ -60,7 +60,7 @@ const EvalPlugin: Plugin = {
     
       execute: async function (args, message) {
         const src = args[0].value;
-        const [error, result, elapsed] = await evaluate(src, false);
+        const [error, result, elapsed] = await evaluate(src);
         sendReply(message.channel.id, [
           `${error ? "Failed executing" : "Successfully executed"} in ${elapsed}ms`,
           `\`\`\`js\n${result}\n\`\`\``
