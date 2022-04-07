@@ -1,12 +1,27 @@
-import { Command, EnmitySectionID, ApplicationCommandInputType, ApplicationCommandOptionType, ApplicationCommandType } from "enmity-api/commands";
-import { Plugin, registerPlugin } from "enmity-api/plugins";
 import { sendReply } from "enmity-api/clyde";
+import { ApplicationCommandInputType, ApplicationCommandOptionType, ApplicationCommandType, Command, EnmitySectionID } from "enmity-api/commands";
+import { Plugin, registerPlugin } from "enmity-api/plugins";
+import { Image } from "enmity-api/react";
 import { get } from "enmity-api/rest";
 
 const catboys_img_types = [
   'img',
   'baka'
 ]
+
+async function getImageSize(file: string): Promise<any> {
+  return new Promise(
+    (resolve, reject) => {
+      Image.getSize(file, (width: number, height: number) => {
+        resolve({ width, height });
+      }, 
+      (error) => {
+        reject(error);
+      });
+    }
+  );
+}
+
 const CatboysPlugin: Plugin = {
   name: "Catboys",
   commands: [],
@@ -54,22 +69,65 @@ const CatboysPlugin: Plugin = {
         const whisper = args[1]?.value ?? true
         const resp = await get(`https://api.catboys.com/${text}`);
         if (resp.ok && resp.body['error'] === "none") {
-          const channel = message.channel;
-          let reply: string = "";
-          if (text === "img") {
-            reply = [
-              `Artist: <${resp.body['artist']}> (<${resp.body['artist_url']}>)`,
-              `Sauce: <${resp.body['source_url']}>`,
-              resp.body['url']
-            ].join("\n")
-          }
-          else {
-            reply = resp.body['url']
-          }
           if (whisper) {
-            sendReply(channel.id, reply);
-          }
-          else {
+            const { width, height } = await getImageSize(resp.body['url']);
+            let embed = {
+              type: 'rich',
+              title: text === "img" ? 'random image' : `random ${text} image`,
+              image: {
+                proxy_url: `https://external-content.duckduckgo.com/iu/?u=${resp.body['url']}`,
+                url: resp.body['url'],
+                width: width,
+                height: height
+              },
+              footer: {
+                text: "catboys.com"
+              },
+              color: '0x45f5f5'
+            }
+            if (text === "img" && resp.body['artist'] !== "unknown") {
+              Object.assign(embed, {
+                fields: [
+                  {
+                    inline: true,
+                    name: "Artist",
+                    value: `[${resp.body['artist']}](${resp.body['artist_url']})`
+                  } 
+                ]
+              });
+            }
+            
+            const component = {
+              type: 1,
+              components: [{
+                type: 2,
+                style: 5,
+                label: "View image",
+                url: resp.body['url']
+              }]
+            }
+            
+            sendReply(
+              message.channel.id, 
+              {
+                embeds: [embed],
+                components: [component]
+              }, 
+              "catboys.com", 
+              "https://github.com/Catboys-Dev.png"
+            );
+          } else {
+            let reply: string;
+            if (text === "img" && resp.body['artist'] !== "unknown") {
+              reply = [
+                `Artist: <${resp.body['artist']}> (<${resp.body['artist_url']}>)`,
+                `Sauce: <${resp.body['source_url']}>`,
+                resp.body['url']
+              ].join("\n")
+            }
+            else {
+              reply = resp.body['url']
+            }
             return {
               content: reply
             };

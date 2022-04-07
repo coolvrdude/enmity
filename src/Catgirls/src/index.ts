@@ -1,9 +1,89 @@
-import { Command, EnmitySectionID, ApplicationCommandInputType, ApplicationCommandOptionType, ApplicationCommandType } from "enmity-api/commands";
-import { Plugin, registerPlugin } from "enmity-api/plugins";
 import { sendReply } from "enmity-api/clyde";
+import { ApplicationCommandInputType, ApplicationCommandOptionType, ApplicationCommandType, Command, EnmitySectionID } from "enmity-api/commands";
+import { Plugin, registerPlugin } from "enmity-api/plugins";
+import { Image } from "enmity-api/react";
 import { get } from "enmity-api/rest";
 
-const nekos_life_img_types = ['solog', 'smug', 'feet', 'smallboobs', 'lewdkemo', 'woof', 'gasm', 'solo', '8ball', 'goose', 'cuddle', 'avatar', 'cum', 'slap', 'les', 'v3', 'erokemo', 'bj', 'pwankg', 'nekoapi_v3.1', 'ero', 'hololewd', 'pat', 'gecg', 'holo', 'poke', 'feed', 'fox_girl', 'tits', 'nsfw_neko_gif', 'eroyuri', 'holoero', 'pussy', 'Random_hentai_gif', 'lizard', 'yuri', 'keta', 'neko', 'hentai', 'feetg', 'eron', 'erok', 'baka', 'kemonomimi', 'hug', 'cum_jpg', 'nsfw_avatar', 'erofeet', 'meow', 'kiss', 'wallpaper', 'tickle', 'blowjob', 'spank', 'kuni', 'classic', 'waifu', 'femdom', 'boobs', 'trap', 'lewd', 'pussy_jpg', 'anal', 'futanari', 'ngif', 'lewdk']
+const nekos_life_img_types = [ 
+  "tickle",
+  "slap",
+  "poke",
+  "pat",
+  "neko",
+  "meow",
+  "lizard",
+  "kiss",
+  "hug",
+  "fox_girl",
+  "feed",
+  "cuddle",
+  "ngif",
+  "kemonomimi",
+  "holo",
+  "smug",
+  "baka",
+  "woof",
+  "wallpaper",
+  "goose",
+  "gecg",
+  "avatar",
+  "waifu"
+];
+
+const nekos_life_nsfw_img_types = [
+  "Random_hentai_gif",
+  "pussy",
+  "nsfw_neko_gif",
+  "lewd",
+  "les",
+  "kuni",
+  "cum",
+  "classic",
+  "boobs",
+  "bj",
+  "anal",
+  "nsfw_avatar",
+  "yuri",
+  "trap",
+  "tits",
+  "solog",
+  "solo",
+  "pwankg",
+  "pussy_jpg",
+  "lewdkemo",
+  "lewdk",
+  "keta",
+  "hololewd",
+  "holoero",
+  "hentai",
+  "futanari",
+  "femdom",
+  "feetg",
+  "erofeet",
+  "feet",
+  "ero",
+  "erok",
+  "erokemo",
+  "eron",
+  "eroyuri",
+  "cum_jpg",
+  "blowjob",
+  "spank",
+  "gasm"
+]
+
+async function getImageSize(file: string): Promise<any> {
+  return new Promise(
+    (resolve, reject) => {
+      Image.getSize(file, (width: number, height: number) => {
+        resolve({ width, height });
+      }, 
+      (error) => {
+        reject(error);
+      });
+    }
+  );
+}
 
 const CatgirlsPlugin: Plugin = {
   name: "Catgirls",
@@ -33,7 +113,9 @@ const CatgirlsPlugin: Plugin = {
           
           type: ApplicationCommandOptionType.String,
           required: true,
-          choices: nekos_life_img_types.map(x => ({name: x, displayName: x, value: x}))
+          choices: nekos_life_img_types.map(x => ({name: x, displayName: x, value: x})).concat(
+            nekos_life_nsfw_img_types.map(x => ({name: `[NSFW] ${x}`, displayName: `[NSFW] ${x}`, value: x}))
+          )
         },
         {
           name: "whisper",
@@ -52,9 +134,35 @@ const CatgirlsPlugin: Plugin = {
         const whisper = args[1]?.value ?? true
         const resp = await get(`https://nekos.life/api/v2/img/${text}`);
         if (resp.ok) {
-          const channel = message.channel;
           if (whisper) {
-            sendReply(channel.id, resp.body['url']);
+            const { width, height } = await getImageSize(resp.body['url']);
+            const embed = {
+              type: 'rich',
+              title: `${nekos_life_nsfw_img_types.indexOf(text) !== -1 ? "[NSFW] " : ""}random ${text} image`,
+              image: {
+                proxy_url: `https://external-content.duckduckgo.com/iu/?u=${resp.body['url']}`,
+                url: resp.body['url'],
+                width: width,
+                height: height
+              },
+              footer: {
+                text: "nekos.life"
+              },
+              color: '0x45f5f5'
+            }
+            const component = {
+              type: 1,
+              components: [{
+                type: 2,
+                style: 5,
+                label: "View image",
+                url: resp.body['url']
+              }]
+            }
+            sendReply(message.channel.id, {
+              embeds: [embed],
+              components: [component]
+            }, "nekos.life", "https://github.com/Nekos-life.png");
           }
           else {
             return {
