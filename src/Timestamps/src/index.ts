@@ -13,9 +13,9 @@ function convertTo24HourTime(time: string): string {
   const AMPM = time.slice(-2).toLowerCase();
   let timeArr = time.slice(0, -2).split(":");
   let retVal: string;
-  if (AMPM === "am" && timeArr[0] === "12") {
+  if (AMPM === "am") {
     // catching edge-case of 12AM
-    timeArr[0] = "00";
+    timeArr[0] = timeArr[0] === "12" ? "00" : timeArr[0];
     retVal = timeArr.join(":");
   } else if (AMPM === "pm") {
     // everything with PM can just be mod'd and added with 12 - the max will be 23
