@@ -22,7 +22,11 @@ export default defineConfig({
     commonjs(),
     esbuild({ minify: true, target: "ES2019" }),
     createPluginJson(),
-  ]
+  ],
+  onwarn(warning, warn) {
+    if (warning.code === 'EVAL') return
+    warn(warning)
+  }
 });
 
 function createPluginJson(options = {}): Plugin {
