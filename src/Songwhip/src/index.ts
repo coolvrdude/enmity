@@ -58,7 +58,7 @@ const SongwhipPlugin: Plugin = {
     });
 
     const UploadSongwhipPatcher = create("upload-songwhip-patcher");
-    UploadSongwhipPatcher.before(UploadsModule.default, "uploadLocalFiles", (_, args, res) => {
+    UploadSongwhipPatcher.instead(UploadsModule.default, "uploadLocalFiles", (_, args, res) => {
       // channel ID: args[0]["id"]
       const setting: boolean = getSetting("me.beerpsi.songwhip-autoconvert") === "true"
       let message = args[3]["content"]
