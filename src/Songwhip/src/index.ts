@@ -5,10 +5,10 @@ import { create } from "enmity-api/patcher";
 import { Plugin, registerPlugin } from "enmity-api/plugins";
 import { post } from "enmity-api/rest";
 import { getSetting, setSetting } from "enmity-api/settings";
+import { MusicRegex } from "./regex";
 
 const MessagesModule = getModule(m => m.default?.sendMessage)
 const UploadsModule = getModule(m => m.default?.uploadLocalFiles)
-const MusicRegex = new RegExp("(https?://(?:open.spotify.com/track/[A-Za-z0-9]+|music.apple.com/[[a-zA-Z][a-zA-Z]]?/album/[a-zA-Z\\d%\\(\\)-]+/[\\d]{1,10}\\?i=[\\d]{1,15}|soundcloud.com/\\S+|listen.tidal.com/track/\\d+))", "gi")
 
 interface SongwhipQueryAttempt {
   success: boolean,
