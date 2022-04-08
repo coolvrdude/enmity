@@ -6,5 +6,6 @@ const SubMusicRegex: string[] = [
     "(?:music.|www.)?youtube.com/watch\\S*?v=[0-9a-zA-Z_-]{11}\\S*",
     "www.deezer.com/track/\\d+",
     "music.amazon.com/albums/[0-9A-Z]+\\?trackAsin=[0-9A-Z]+",
+    "open.qobuz.com/track/\\d+",
 ];
 export const MusicRegex = new RegExp(`(https?://(?:${SubMusicRegex.join("|")}))`, "gi");

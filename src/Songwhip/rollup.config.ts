@@ -57,6 +57,7 @@ function validateMusicRegex(options = {}): Plugin {
         "https://www.deezer.com/track/1383830592",
         "https://music.youtube.com/watch?v=s0K53t4dNyg&feature=share",
         "https://listen.tidal.com/track/51123340",
+        "https://open.qobuz.com/track/147400636",
       ]
       for (let i in testURLs) {
         if (testURLs[i].search(MusicRegex) === -1) {
