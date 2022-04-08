@@ -1,10 +1,15 @@
+import commonjs from "@rollup/plugin-commonjs";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+// @ts-ignore: IT EXISTS YOU MOTHERFUCKER
+import { Buffer } from "buffer";
+// @ts-ignore: YOU TOO
+import { mkdir, readFile, writeFile } from "fs";
+// @ts-ignore: YOU TOO
+import { basename } from "path";
+// @ts-ignore: AND YOU TOO
+import * as process from 'process';
 import { defineConfig, Plugin } from "rollup";
 import esbuild from "rollup-plugin-esbuild";
-import { nodeResolve } from "@rollup/plugin-node-resolve";
-import commonjs from "@rollup/plugin-commonjs";
-
-import { basename } from "path";
-import { writeFileSync } from "fs";
 
 const pluginName = basename(process.cwd());
 
@@ -20,7 +25,7 @@ export default defineConfig({
   plugins: [
     nodeResolve(),
     commonjs(),
-    esbuild({ minify: true, target: "ES2019" }),
+    esbuild({ minify: true, target: "ES2019" }),,
     createPluginJson(),
   ]
 });
@@ -28,16 +33,21 @@ export default defineConfig({
 function createPluginJson(options = {}): Plugin {
   return {
     name: 'plugin-info',
-    buildEnd: (err) => {
-      const info = require('./package.json');
-      const data = {
-        "name": pluginName,
-        "description": info?.description ?? "No description was provided.",
-        "author": info?.author?.name ?? "Unknown",
-        "version": info?.version ?? "1.0.0"
-      };
-
-      writeFileSync(`dist/${pluginName}.json`, JSON.stringify(data, null, "\t"));
+    writeBundle: (_) => {
+      readFile('./package.json', (err: Error, data: Buffer) => {
+        if (err) throw err;
+        const info = JSON.parse(String(data));
+        const pluginData = {
+          "name": pluginName,
+          "description": info?.description ?? "No description was provided.",
+          "author": info?.author?.name ?? "Unknown",
+          "version": info?.version ?? "1.0.0"
+        };
+        mkdir('./dist/', { recursive: true }, (err: any) => {
+          if (err) throw err;
+          writeFile(`./dist/${pluginName}.json`, JSON.stringify(pluginData, null, 4), { flag: 'a+' }, (_: any) => {})  
+        })
+      })
     }
   }
 };

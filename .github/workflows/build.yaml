@@ -3,12 +3,12 @@ name: Build and publish Enmity plugins
 on:
   push:
     paths:
-    - '**.js'
-    - '**.json'
-    - '**.ts'
-    - '.github/workflows/build.yaml'
+      - "**.js"
+      - "**.json"
+      - "**.ts"
+      - ".github/workflows/build.yaml"
     branches:
-    - main
+      - main
 
 jobs:
   build:
@@ -17,20 +17,17 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
-      -
-        name: Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v3
         with:
           submodules: true
-      -
-        name: Setup Noode
+      - name: Setup Noode
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
-          cache: 'npm'
-          cache-dependency-path: 'src/*/package-lock.json'
-      -
-        name: Building plugins
+          node-version: "16"
+          cache: "npm"
+          cache-dependency-path: "src/*/package-lock.json"
+      - name: Building plugins
         run: |
           for plugin in src/*; do
             if [ "$(basename $plugin)" = "PluginTemplate" ]; then
@@ -43,8 +40,7 @@ jobs:
               npm run build
             )
           done
-      -
-        name: Upload artifacts
+      - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: plugins
@@ -54,32 +50,28 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     needs: build
+    if: "!contains(github.event.head_commit.message, 'skip-publish')"
     steps:
-      - 
-        name: Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v3
         with:
           submodules: true
-      - 
-        name: Download artifacts
+      - name: Download artifacts
         uses: actions/download-artifact@v3
-        with: 
+        with:
           name: plugins
           path: plugins-artifact/
-      -
-        name: Flatten plugins repository
+      - name: Flatten plugins repository
         run: |
           mkdir -p plugins 
           find plugins-artifact -type f -name '*.js' -exec cp '{}' plugins \;
           find plugins-artifact -type f -name '*.json' -exec cp '{}' plugins \;
           rm -rf plugins-artifact
-      -
-        name: Setup Go
+      - name: Setup Go
         uses: actions/setup-go@v3
         with:
-          go-version: '^1.17'
-      -
-        name: Setup Enmity Store
+          go-version: "^1.17"
+      - name: Setup Enmity Store
         run: |
           mkdir -p $HOME/.enmity-store
           git clone https://github.com/beerpiss/enmity-store $HOME/.enmity-store
@@ -88,8 +80,7 @@ jobs:
             go run cmds/store/main.go -name "beerpsi's shitposts" -dir ${{ github.workspace }}
           )
           touch publish/.nojekyll
-      - 
-        name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4.2.5
         if: github.ref == 'refs/heads/main'
         with:
@@ -98,4 +89,3 @@ jobs:
           git-config-name: GitHub Actions
           git-config-email: github-actions[bot]@users.noreply.github.com
           single-commit: true
-
