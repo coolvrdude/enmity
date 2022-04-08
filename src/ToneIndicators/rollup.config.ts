@@ -45,7 +45,7 @@ function createPluginJson(options = {}): Plugin {
         };
         mkdir('./dist/', { recursive: true }, (err: any) => {
           if (err) throw err;
-          writeFile(`./dist/${pluginName}.json`, JSON.stringify(pluginData, null, 4), { flag: 'a+' }, (_: any) => {})  
+          writeFile(`./dist/${pluginName}.json`, JSON.stringify(pluginData, null, 4), { flag: 'w' }, (_: any) => {})  
         })
       })
     }
