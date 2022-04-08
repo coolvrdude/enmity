@@ -8,4 +8,4 @@ const SubMusicRegex: string[] = [
     "music.amazon.com/albums/[0-9A-Z]+\\?trackAsin=[0-9A-Z]+",
     "open.qobuz.com/track/\\d+",
 ];
-export const MusicRegex = new RegExp(`(https?://(?:${SubMusicRegex.join("|")}))`, "gi");
+export const MusicRegex: RegExp = new RegExp(`(https?://(?:${SubMusicRegex.join("|")}))`, "gi");
