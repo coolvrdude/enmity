@@ -57,10 +57,6 @@ const TwitterNoTracking: Plugin = {
         // channel ID: args[0]
         var orig = args[1]["content"];
         args[1]["content"] = removeTwitterURLTracking(args[1].content);
-        //showDialog({
-        ///  body: "Message sent: " + args[1].content + " \n original message: " + orig,
-        ///  title: "message twitter patcher test"
-        //})
       });
   },
 
