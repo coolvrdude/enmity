@@ -77,7 +77,7 @@ jobs:
           git clone https://github.com/beerpiss/enmity-store $HOME/.enmity-store
           (
             cd $HOME/.enmity-store
-            go run cmds/store/main.go -name "beerpsi's shitposts" -dir ${{ github.workspace }}
+            go run cmds/store/main.go -name "thonk's enmity store" -dir ${{ github.workspace }}
           )
           touch publish/.nojekyll
       - name: Deploy to GitHub Pages
