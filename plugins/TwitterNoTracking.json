@@ -1,0 +1,6 @@
+{
+	"name": "TwitterNoTracking",
+	"description": "Removes the tracking parameter from Twitter links",
+	"author": "thonk enthusiast",
+	"version": "1.0.0"
+}
