@@ -41,6 +41,7 @@ const TwitterNoTracking: Plugin = {
             urlMatches.forEach((url) => {
                 if (url.includes("twitter.com")) {
                     var urlStripped = removeParam("t", url);
+                    var urlStripped = removeParam("s", url);
                     message = message.replace(url, urlStripped); // Keeps the message while only modifying the URL
                 }
             });
