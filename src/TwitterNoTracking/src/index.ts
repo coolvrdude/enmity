@@ -67,5 +67,3 @@ const TwitterNoTracking: Plugin = {
 }
 
 registerPlugin(TwitterNoTracking);
-
-
