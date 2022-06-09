@@ -79,7 +79,6 @@ jobs:
             cd $HOME/.enmity-store
             go run cmds/store/main.go -name "thonk's enmity store" -dir ${{ github.workspace }}
           )
-          touch publish/.nojekyll
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4.2.5
         if: github.ref == 'refs/heads/main'
