@@ -74,7 +74,7 @@ jobs:
       - name: Setup Enmity Store
         run: |
           mkdir -p $HOME/.enmity-store
-          git clone https://github.com/beerpiss/enmity-store $HOME/.enmity-store
+          git clone https://github.com/coolvrdude/enmity-store $HOME/.enmity-store
           (
             cd $HOME/.enmity-store
             go run cmds/store/main.go -name "thonk's enmity store" -dir ${{ github.workspace }}
